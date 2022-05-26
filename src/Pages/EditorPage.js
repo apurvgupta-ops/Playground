@@ -9,7 +9,7 @@ const EditorPage = () => {
   ]);
 
   return (
-    <div className="h-screen w-auto flex">
+    <div className="flex">
       <div className="border-r-4 border-pink-900 w-64 h-screen bg-gradient-to-b from-indigo-600 via-purple-700 to-blue-1000">
         <div className=" flex justify-start items-center text-white">
           <img src={logo} alt="logo" className="h-10 w-10 m-2 rounded-full" />
@@ -36,7 +36,7 @@ const EditorPage = () => {
           </div>
         </div>
       </div>
-      <div>
+      <div className="w-full">
         <Editor />
       </div>
     </div>
