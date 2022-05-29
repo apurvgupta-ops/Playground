@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 const http = require("http");
 const { Server, Socket } = require("socket.io");
 const Actions = require("./src/Actions");
@@ -7,6 +8,12 @@ const Actions = require("./src/Actions");
 const server = http.createServer(app);
 
 const io = new Server(server);
+
+app.use(express.static("build"));
+
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 const useUserMap = {};
 
