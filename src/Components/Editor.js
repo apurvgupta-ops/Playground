@@ -7,10 +7,10 @@ import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import Actions from "../Actions";
 
-const Editor = ({ socketRef, roomId }) => {
+const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const editorRef = useRef(null);
   useEffect(() => {
-    const code = async () => {
+    const init = async () => {
       editorRef.current = Codemirror.fromTextArea(
         document.getElementById("textarea"),
         {
@@ -26,19 +26,33 @@ const Editor = ({ socketRef, roomId }) => {
       editorRef.current.on("change", (instances, changes) => {
         console.log("changes", changes);
         const { origin } = changes;
-        const codes = instances.getValue();
+        const code = instances.getValue();
+        onCodeChange(code);
         if (origin !== "setValue") {
           socketRef.current.emit(Actions.CODE_CHANGE, {
             roomId,
-            codes,
+            code,
           });
         }
       });
       // console.log(code);
     };
 
-    code();
+    init();
   }, []);
+  useEffect(() => {
+    if (socketRef.current) {
+      socketRef.current.on(Actions.CODE_CHANGE, ({ code }) => {
+        if (code !== null) {
+          editorRef.current.setValue(code);
+        }
+      });
+    }
+
+    return () => {
+      socketRef.current.off(Actions.CODE_CHANGE);
+    };
+  }, [socketRef.current]);
 
   return <textarea id="textarea"></textarea>;
 };

@@ -15,8 +15,9 @@ const EditorPage = () => {
   const [client, setClient] = useState([]);
 
   const socketRef = useRef();
+  const codeRef = useRef();
   const location = useLocation();
-  const { roomId } = useNavigate();
+  const { roomId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +46,10 @@ const EditorPage = () => {
             console.log(`${userName}joined`);
           }
           setClient(clients);
+          socketRef.current.emit(Actions.SYNC_CODE, {
+            code: codeRef.current,
+            socketId,
+          });
         }
       );
 
@@ -59,11 +64,32 @@ const EditorPage = () => {
       });
     };
     init();
+
+    //CLEANUP
+    return () => {
+      socketRef.current.off(Actions.JOIN);
+      socketRef.current.off(Actions.JOINED);
+      socketRef.current.disconnect();
+    };
   }, []);
 
   if (!location.state) {
     return <Navigate to={"/"} />;
   }
+
+  const copyRoomId = async () => {
+    try {
+      await navigator.clipboard.writeText(roomId);
+      console.log(roomId);
+      toast.success("RoomId copied");
+    } catch (error) {
+      toast.error("Not able to copy roomId ");
+    }
+  };
+
+  const leaveRoom = () => {
+    navigate("/");
+  };
 
   return (
     <div className="flex">
@@ -84,17 +110,29 @@ const EditorPage = () => {
             ))}
           </div>
           <div className="flex flex-col items-center">
-            <button className="bg-gradient-to-b from-indigo-400 via-purple-500 to-blue-800 px-2 py-1 rounded-lg ">
+            <button
+              onClick={copyRoomId}
+              className="bg-gradient-to-b from-indigo-400 via-purple-500 to-blue-800 px-2 py-1 rounded-lg "
+            >
               Copy Room Id
             </button>
-            <button className="bg-gradient-to-b from-indigo-400 via-purple-500 to-blue-800 px-2 py-1 rounded-lg">
+            <button
+              onClick={leaveRoom}
+              className="bg-gradient-to-b from-indigo-400 via-purple-500 to-blue-800 px-2 py-1 rounded-lg"
+            >
               Leave
             </button>
           </div>
         </div>
       </div>
       <div className="w-full">
-        <Editor socketRef={socketRef} roomId={roomId} />
+        <Editor
+          socketRef={socketRef}
+          roomId={roomId}
+          onCodeChange={(code) => {
+            codeRef.current = code;
+          }}
+        />
       </div>
     </div>
   );
