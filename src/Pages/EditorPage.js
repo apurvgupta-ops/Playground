@@ -36,16 +36,27 @@ const EditorPage = () => {
         userName: location.state?.userName,
       });
 
+      //LISTENING ON JOIN
       socketRef.current.on(
         Actions.JOINED,
         ({ clients, userName, socketId }) => {
-          if (userName !== location.state) {
+          if (userName !== location.state?.userName) {
             toast.success(`${userName} joined to the room`);
             console.log(`${userName}joined`);
           }
           setClient(clients);
         }
       );
+
+      //LISTENING ON DISCONNECT
+      socketRef.current.on(Actions.DISCONNECTED, ({ socketId, userName }) => {
+        toast.success(`${userName} left the room`);
+        console.log(`${userName} left the room`);
+
+        setClient((prev) => {
+          return prev.filter((client) => client.socketId !== socketId);
+        });
+      });
     };
     init();
   }, []);
@@ -83,7 +94,7 @@ const EditorPage = () => {
         </div>
       </div>
       <div className="w-full">
-        <Editor />
+        <Editor socketRef={socketRef} roomId={roomId} />
       </div>
     </div>
   );

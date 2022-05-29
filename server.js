@@ -37,6 +37,19 @@ io.on("connection", (socket) => {
     });
     console.log(clients);
   });
+
+  socket.on("disconnecting", () => {
+    const rooms = [...socket.rooms];
+    rooms.forEach((roomId) => {
+      socket.in(roomId).emit(Actions.DISCONNECTED, {
+        socketId: socket.id,
+        userName: useUserMap[socket.id],
+      });
+    });
+
+    delete useUserMap[socket.id];
+    socket.leave();
+  });
 });
 
 const PORT = 5000;
