@@ -1,12 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import toast from "react-hot-toast";
+import {
+  useLocation,
+  useNavigate,
+  Navigate,
+  useParams,
+} from "react-router-dom";
+import Actions from "../Actions";
 import logo from "../assets/sangharsh-lohakare-Iy7QyzOs1bo-unsplash.jpg";
 import Client from "../Components/Client";
 import Editor from "../Components/Editor";
+import { initSocket } from "../socket";
 const EditorPage = () => {
+  const socketRef = useRef();
+  const location = useLocation();
+  const { roomId } = useNavigate();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const init = async () => {
+      socketRef.current = await initSocket();
+      socketRef.current.on("connect-error", (err) => handleError(err));
+      socketRef.current.on("connect-failed", (err) => handleError(err));
+
+      const handleError = (err) => {
+        console.log("socket-error", err);
+        toast.error("Socket connection failed");
+        navigate("/");
+      };
+
+      socketRef.current.emit(Actions.JOIN, {
+        roomId,
+        userName: location.state?.userName,
+      });
+    };
+    init();
+  }, []);
+
   const [client, setClient] = useState([
     { socketId: 1, userName: "Apurv" },
     { socketId: 1, userName: "Gorav" },
   ]);
+
+  if (!location.state) {
+    return <Navigate to={"/"} />;
+  }
 
   return (
     <div className="flex">
