@@ -12,6 +12,8 @@ import Client from "../Components/Client";
 import Editor from "../Components/Editor";
 import { initSocket } from "../socket";
 const EditorPage = () => {
+  const [client, setClient] = useState([]);
+
   const socketRef = useRef();
   const location = useLocation();
   const { roomId } = useNavigate();
@@ -33,14 +35,20 @@ const EditorPage = () => {
         roomId,
         userName: location.state?.userName,
       });
+
+      socketRef.current.on(
+        Actions.JOINED,
+        ({ clients, userName, socketId }) => {
+          if (userName !== location.state) {
+            toast.success(`${userName} joined to the room`);
+            console.log(`${userName}joined`);
+          }
+          setClient(clients);
+        }
+      );
     };
     init();
   }, []);
-
-  const [client, setClient] = useState([
-    { socketId: 1, userName: "Apurv" },
-    { socketId: 1, userName: "Gorav" },
-  ]);
 
   if (!location.state) {
     return <Navigate to={"/"} />;
