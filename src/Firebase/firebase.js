@@ -6,14 +6,12 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDnMw3-BG2n0mMPCH-TTTgnDu_6Ub3K93E",
-  authDomain: "deliveryapp-72734.firebaseapp.com",
-  databaseURL: "https://deliveryapp-72734-default-rtdb.firebaseio.com",
-  projectId: "deliveryapp-72734",
-  storageBucket: "deliveryapp-72734.appspot.com",
-  messagingSenderId: "275874797408",
-  appId: "1:275874797408:web:e208ce24ac304eec753005",
-  measurementId: "G-HN4ZHEDDSF",
+  apiKey: "AIzaSyAVnzffoTAT7m12RQbIqX3-URJHAtU2NAs",
+  authDomain: "realtime-editor-8799c.firebaseapp.com",
+  projectId: "realtime-editor-8799c",
+  storageBucket: "realtime-editor-8799c.appspot.com",
+  messagingSenderId: "881386762626",
+  appId: "1:881386762626:web:55dd0cee2daa6fdfc3df9b",
 };
 
 // Initialize Firebase
