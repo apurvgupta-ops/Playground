@@ -5,6 +5,9 @@ import "codemirror/theme/dracula.css";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
+import "codemirror/addon/display/fullscreen";
+import "codemirror/addon/scroll/simplescrollbars";
+import "codemirror/addon/display/panel";
 import Actions from "../Actions";
 
 const Editor = ({ socketRef, roomId, onCodeChange }) => {
@@ -19,6 +22,9 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
           autoCloseTags: true,
           autoCloseBrackets: true,
           lineNumbers: true,
+          // scrollbarStyle: "simple",
+
+          // fullScreen: true,
         }
       );
 

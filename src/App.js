@@ -22,14 +22,14 @@ const App = () => {
         ></Toaster>
       </div>
       <div className="h-screen bg-gradient-to-b from-indigo-300 via-purple-500 to-blue-800">
-        {!user ? (
+        {/* {!user ? (
           <Login />
-        ) : (
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/editor/:roomId" element={<EditorPage />} />
-          </Routes>
-        )}
+        ) : ( */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/editor/:roomId" element={<EditorPage />} />
+        </Routes>
+        {/* )} */}
       </div>
     </>
   );

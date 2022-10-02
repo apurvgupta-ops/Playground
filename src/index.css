@@ -15,3 +15,6 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.CodeMirror {
+  height: 100% !important;
+}
